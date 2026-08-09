@@ -13,7 +13,7 @@
             color: #333;
         }
         header {
-            background-color: #1e3d59; /* Profi mérnöki sötétkék */
+            background-color: #1e3d59;
             color: white;
             padding: 3rem 1rem;
             text-align: center;
@@ -27,6 +27,21 @@
             font-size: 1.2rem;
             margin-top: 10px;
             color: #d1d8e0;
+        }
+        nav {
+            background-color: #333;
+            text-align: center;
+            padding: 15px;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 20px;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        nav a:hover {
+            color: #ff6e40;
         }
         .container {
             max-width: 800px;
@@ -50,7 +65,7 @@
         }
         .contact-btn {
             display: inline-block;
-            background-color: #ff6e40; /* Figyelemfelkeltő narancssárga gomb */
+            background-color: #ff6e40;
             color: white;
             padding: 12px 25px;
             text-decoration: none;
@@ -69,6 +84,12 @@
         <h1>NPM Geo</h1>
         <p>Precíz Földmérés Veszprém megyében és a Bakony térségében</p>
     </header>
+
+    <nav>
+        <a href="index.html">Főoldal</a>
+        <a href="szolgaltatasok.html">Szolgáltatások</a>
+        <a href="kapcsolat.html">Kapcsolat</a>
+    </nav>
     
     <div class="container">
         <div class="services">
@@ -77,13 +98,14 @@
             
             <h3>Fő szolgáltatásaim:</h3>
             <ul>
-                <li>Telekhatár-rendezés, telekhatár kitűzése</li>
-                <li>Épületfeltüntetés, változási vázrajzok készítése</li>
-                <li>Megosztás és telekalakítás</li>
-                <li>Tervezési alaptérképek, megvalósulási térképek készítése</li>
+                <li>Épületfeltüntetés és épülettörlés</li>
+                <li>Telekmegosztás, egyesítés és határrendezés</li>
+                <li>Használati megosztás és szolgalmi jogok rögzítése</li>
+                <li>Művelési ág megváltoztatása (termőföldek)</li>
+                <li>Egyéb geodéziai felmérések egyedi igények alapján</li>
             </ul>
             
-            <a href="mailto:info@npmgeo.hu" class="contact-btn">Kérjen ajánlatot!</a>
+            <a href="kapcsolat.html" class="contact-btn">Kérjen ajánlatot!</a>
         </div>
     </div>
 </body>
