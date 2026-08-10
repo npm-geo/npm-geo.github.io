@@ -48,10 +48,12 @@
             <p>Számítsa ki gyorsan termőföldje aranykorona értékét!</p>
             
             <div class="form-group">
-                <label for="telepulesSelect">Település</label>
-                <select id="telepulesSelect">
-                    <option value="">-- Válasszon települést --</option>
-                </select>
+                <label for="telepulesInput">Település</label>
+                <!-- Kereshető mező -->
+                <input list="telepulesList" id="telepulesInput" placeholder="Kezdje el gépelni a település nevét...">
+                <datalist id="telepulesList">
+                    <!-- Ide tölti be a JavaScript a városokat -->
+                </datalist>
             </div>
 
             <div class="form-group">
@@ -87,7 +89,6 @@
                 <input type="number" id="teruletInput" placeholder="pl. 1500" min="1">
             </div>
 
-            <!-- A gomb alapból le van tiltva, amíg a CSV-k be nem töltődnek -->
             <button id="szamolGomb" class="calc-btn" onclick="szamolAK()" disabled>Adatok betöltése folyamatban...</button>
 
             <div id="eredmeny-doboz">
@@ -97,21 +98,18 @@
         </div>
     </div>
 
-    <!-- JAVASCRIPT: A CSV FÁJLOK BEOLVASÁSA ÉS A MATEMATIKA -->
     <script>
         let telepulesek = {};
         let akAdatbazis = {};
 
-        // Automatikus adatbetöltés a háttérben
         async function adatokBetoltese() {
             try {
-                // 1. Települések CSV beolvasása
                 const resTelepules = await fetch('telepulesek.csv');
                 if (!resTelepules.ok) throw new Error("A telepulesek.csv nem található!");
                 const szovegTelepules = await resTelepules.text();
                 const sorokTelepules = szovegTelepules.split('\n');
 
-                for (let i = 1; i < sorokTelepules.length; i++) { // Az első sor a fejléc, kihagyjuk
+                for (let i = 1; i < sorokTelepules.length; i++) {
                     if (sorokTelepules[i].trim() === "") continue;
                     const adatok = sorokTelepules[i].split(';');
                     if (adatok.length >= 2) {
@@ -121,7 +119,6 @@
                     }
                 }
 
-                // 2. Értékek CSV beolvasása
                 const resErtek = await fetch('ertek.csv');
                 if (!resErtek.ok) throw new Error("Az ertek.csv nem található!");
                 const szovegErtek = await resErtek.text();
@@ -137,25 +134,21 @@
                         if (!akAdatbazis[kod]) akAdatbazis[kod] = {};
                         if (!akAdatbazis[kod][ag]) akAdatbazis[kod][ag] = {};
                         
-                        // 1-8 osztályok feltöltése (tömb 2-9 indexei)
                         for (let osztaly = 1; osztaly <= 8; osztaly++) {
-                            // Cseréljük a vesszőt pontra, hogy a matek működjön
                             let szamForma = adatok[osztaly + 1].replace(',', '.').trim(); 
                             akAdatbazis[kod][ag][osztaly.toString()] = parseFloat(szamForma) || 0;
                         }
                     }
                 }
 
-                // 3. Legördülő menü feltöltése ABC sorrendben
-                const selT = document.getElementById('telepulesSelect');
+                // Legördülő menü (datalist) feltöltése
+                const dataList = document.getElementById('telepulesList');
                 Object.keys(telepulesek).sort((a, b) => a.localeCompare(b, 'hu')).forEach(t => {
                     let opt = document.createElement('option');
                     opt.value = t;
-                    opt.innerHTML = t;
-                    selT.appendChild(opt);
+                    dataList.appendChild(opt);
                 });
 
-                // 4. Gomb aktiválása (Készen állunk!)
                 const gomb = document.getElementById('szamolGomb');
                 gomb.disabled = false;
                 gomb.innerText = "Kiszámolom!";
@@ -166,19 +159,24 @@
             }
         }
 
-        // Számítás indítása kattintásra
         function szamolAK() {
-            const tNev = document.getElementById('telepulesSelect').value;
+            const tNev = document.getElementById('telepulesInput').value.trim();
             const ag = document.getElementById('muvelesiAgSelect').value;
             const oszt = document.getElementById('osztalySelect').value;
             const m2 = document.getElementById('teruletInput').value;
 
+            // Alap ellenőrzés
             if (tNev === "" || m2 === "" || m2 <= 0) {
-                alert("Kérem, válasszon települést és adjon meg érvényes területet!");
+                alert("Kérem, adja meg a települést és egy érvényes területet!");
                 return;
             }
 
+            // Létezik-e a beírt város az adatbázisban?
             const kod = telepulesek[tNev];
+            if (!kod) {
+                alert("Nem találtam ilyen települést! Kérem, válasszon a felugró listából.");
+                return;
+            }
             
             try {
                 const akHa = akAdatbazis[kod][ag][oszt];
@@ -197,7 +195,6 @@
             }
         }
 
-        // Amikor betölt az oldal, azonnal elindítjuk a CSV olvasót
         window.onload = adatokBetoltese;
     </script>
 </body>
