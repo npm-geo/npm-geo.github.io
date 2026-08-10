@@ -310,6 +310,218 @@
         </div>
     </div>
 
+    <!-- JAVASCRIPT: A CSV FÁJLOK BEOLVASÁSA ÉS A MATEMATIKA -->
+    <script>
+        let telepulesek = {};
+        let akAdatbazis = {};
+
+        // Automatikus adatbetöltés a háttérben
+        async function adatokBetoltese() {
+            try {
+                // 1. Települések CSV beolvasása
+                const resTelepules = await fetch('telepulesek.csv');
+                if (!resTelepules.ok) throw new Error("A telepulesek.csv nem található!");
+                const szovegTelepules = await resTelepules.text();
+                const sorokTelepules = szovegTelepules.split('\n');
+
+                for (let i = 1; i < sorokTelepules.length; i++) {
+                    if (sorokTelepules[i].trim() === "") continue;
+                    const adatok = sorokTelepules[i].split(';');
+                    if (adatok.length >= 2) {
+                        // KISZEDJÜK AZ IDÉZŐJELEKET (") AMIKET AZ EXCEL BELETETT
+                        const nev = adatok[0].replace(/"/g, '').trim();
+                        const kod = adatok[1].replace(/"/g, '').trim();
+                        // Kisbetűs kereső indexet hozunk létre
+                        telepulesek[nev.toLowerCase()] = { nev: nev, kod: kod };
+                    }
+                }
+
+                // 2. Értékek CSV beolvasása
+                const resErtek = await fetch('ertek.csv');
+                if (!resErtek.ok) throw new Error("Az ertek.csv nem található!");
+                const szovegErtek = await resErtek.text();
+                const sorokErtek = szovegErtek.split('\n');
+
+                for (let i = 1; i < sorokErtek.length; i++) {
+                    if (sorokErtek[i].trim() === "") continue;
+                    const adatok = sorokErtek[i].split(';');
+                    if (adatok.length >= 10) {
+                        const kod = adatok[0].replace(/"/g, '').trim();
+                        const ag = adatok[1].replace(/"/g, '').trim().toLowerCase();
+                        
+                        if (!akAdatbazis[kod]) akAdatbazis[kod] = {};
+                        if (!akAdatbazis[kod][ag]) akAdatbazis[kod][ag] = {};
+                        
+                        for (let osztaly = 1; osztaly <= 8; osztaly++) {
+                            // Cseréljük a vesszőt pontra és töröljük az idézőjeleket
+                            let szamForma = adatok[osztaly + 1].replace(/"/g, '').replace(',', '.').trim(); 
+                            akAdatbazis[kod][ag][osztaly.toString()] = parseFloat(szamForma) || 0;
+                        }
+                    }
+                }
+
+                // 3. Legördülő menü (datalist) feltöltése
+                const dataList = document.getElementById('telepulesList');
+                Object.values(telepulesek).sort((a, b) => a.nev.localeCompare(b.nev, 'hu')).forEach(t => {
+                    let opt = document.createElement('option');
+                    opt.value = t.nev;
+                    dataList.appendChild(opt);
+                });
+
+                // 4. Gomb aktiválása (Készen állunk!)
+                const gomb = document.getElementById('szamolGomb');
+                gomb.disabled = false;
+                gomb.innerText = "Kiszámolom!";
+
+            } catch (error) {
+                console.error(error);
+                document.getElementById('szamolGomb').innerText = "Hiba az adatok betöltésekor";
+            }
+        }
+
+        // Számítás indítása kattintásra
+        function szamolAK() {
+            // Kisbetűsítjük a felhasználó által beírt értéket, így mindegy hogy kis vagy nagybetűvel írja
+            const tNevInput = document.getElementById('telepulesInput').value.trim().toLowerCase();
+            const ag = document.getElementById('muvelesiAgSelect').value;
+            const oszt = document.getElementById('osztalySelect').value;
+            const m2 = document.getElementById('teruletInput').value;
+
+            if (tNevInput === "" || m2 === "" || m2 <= 0) {
+                alert("Kérem, adja meg a települést és egy érvényes területet!");
+                return;
+            }
+
+            // Kikeresük a település kódját
+            const tObj = telepulesek[tNevInput];
+            if (!tObj) {
+                alert("Nem találtam ilyen települést! Kérem, válasszon a felugró listából (vagy ellenőrizze az elgépelést).");
+                return;
+            }
+            
+            const kod = tObj.kod;
+
+            try {
+                const akHa = akAdatbazis[kod][ag][oszt];
+                
+                if (akHa === 0 || isNaN(akHa)) {
+                    alert("Erre a minőségi osztályra / művelési ágra nincsen adat (0 érték).");
+                    return;
+                }
+
+                const vegsoAK = (akHa / 10000) * m2;
+                
+                document.getElementById('ak-ertek').innerText = vegsoAK.toFixed(2) + " AK";
+                document.getElementById('eredmeny-doboz').style.display = "block";
+            } catch (e) {
+                alert("Ehhez a kombinációhoz nincsen adat a megadott adatsorban.");
+            }
+        }
+
+        // Amikor betölt az oldal, azonnal elindítjuk a CSV olvasót
+        window.onload = adatokBetoltese;
+    </script>
+</body>
+</html><!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aranykorona Kalkulátor - NPM Geo</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background-color: #f4f4f9; color: #333; }
+        header { background-color: #1e3d59; color: white; padding: 3rem 1rem; text-align: center; }
+        header h1 { margin: 0; font-size: 3rem; letter-spacing: 2px; }
+        header p { font-size: 1.2rem; margin-top: 10px; color: #d1d8e0; }
+        nav { background-color: #333; text-align: center; padding: 15px; }
+        nav a { color: white; text-decoration: none; margin: 0 20px; font-weight: bold; transition: color 0.3s; }
+        nav a:hover { color: #ff6e40; }
+        .container { max-width: 600px; margin: 2rem auto; padding: 0 1rem; }
+        .calculator-box { background: white; padding: 2.5rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h2 { color: #1e3d59; border-bottom: 2px solid #ff6e40; padding-bottom: 10px; margin-top: 0; }
+        
+        .form-group { margin-bottom: 1.5rem; }
+        label { display: block; font-weight: bold; margin-bottom: 0.5rem; color: #1e3d59; }
+        select, input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 1rem; box-sizing: border-box; }
+        
+        .calc-btn { display: block; width: 100%; background-color: #ff6e40; color: white; padding: 15px; border: none; border-radius: 5px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: background-color 0.3s; margin-top: 20px; }
+        .calc-btn:hover { background-color: #ff5722; }
+        .calc-btn:disabled { background-color: #ccc; cursor: not-allowed; }
+        
+        #eredmeny-doboz { display: none; background-color: #eef2f5; padding: 20px; border-radius: 5px; border-left: 5px solid #1e3d59; margin-top: 20px; text-align: center; }
+        #eredmeny-doboz h3 { margin: 0; font-size: 1.2rem; color: #333; }
+        #ak-ertek { font-size: 2rem; color: #ff6e40; font-weight: bold; display: block; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>NPM Geo</h1>
+        <p>Precíz Földmérés Veszprém megyében és a Bakony térségében</p>
+    </header>
+    
+    <nav>
+        <a href="index.html">Főoldal</a>
+        <a href="szolgaltatasok.html">Szolgáltatások</a>
+        <a href="aranykorona.html">AK Kalkulátor</a>
+        <a href="kapcsolat.html">Kapcsolat</a>
+    </nav>
+
+    <div class="container">
+        <div class="calculator-box">
+            <h2>Aranykorona (AK) Kalkulátor</h2>
+            <p>Számítsa ki gyorsan termőföldje aranykorona értékét!</p>
+            
+            <div class="form-group">
+                <label for="telepulesInput">Település</label>
+                <!-- Kereshető mező -->
+                <input list="telepulesList" id="telepulesInput" placeholder="Kezdje el gépelni a település nevét...">
+                <datalist id="telepulesList">
+                    <!-- Ide tölti be a JavaScript a városokat -->
+                </datalist>
+            </div>
+
+            <div class="form-group">
+                <label for="muvelesiAgSelect">Művelési ág</label>
+                <select id="muvelesiAgSelect">
+                    <option value="szántó">Szántó</option>
+                    <option value="rét">Rét</option>
+                    <option value="szőlő">Szőlő</option>
+                    <option value="kert">Kert</option>
+                    <option value="gyümölcsös">Gyümölcsös</option>
+                    <option value="legelő">Legelő</option>
+                    <option value="nádas">Nádas</option>
+                    <option value="fásított terület">Fásított terület</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="osztalySelect">Minőségi osztály</label>
+                <select id="osztalySelect">
+                    <option value="1">1. osztály</option>
+                    <option value="2">2. osztály</option>
+                    <option value="3">3. osztály</option>
+                    <option value="4">4. osztály</option>
+                    <option value="5">5. osztály</option>
+                    <option value="6">6. osztály</option>
+                    <option value="7">7. osztály</option>
+                    <option value="8">8. osztály</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="teruletInput">Terület (m²)</label>
+                <input type="number" id="teruletInput" placeholder="pl. 1500" min="1">
+            </div>
+
+            <button id="szamolGomb" class="calc-btn" onclick="szamolAK()" disabled>Adatok betöltése folyamatban...</button>
+
+            <div id="eredmeny-doboz">
+                <h3>A terület becsült Aranykorona értéke:</h3>
+                <span id="ak-ertek">0.00 AK</span>
+            </div>
+        </div>
+    </div>
+
     <script>
         let telepulesek = {};
         let akAdatbazis = {};
