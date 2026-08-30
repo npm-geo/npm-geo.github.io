@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kapcsolat - NPM Geo</title>
     <style>
+        /* Alapbeállítások */
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background-color: #f4f4f9; color: #333; }
         header { background-color: #1e3d59; color: white; padding: 3rem 1rem; text-align: center; }
         header h1 { margin: 0; font-size: 3rem; letter-spacing: 2px; }
@@ -15,25 +16,45 @@
         
         .container { max-width: 900px; margin: 2rem auto; padding: 0 1rem; display: flex; flex-wrap: wrap; gap: 2rem; }
         
-        /* Elérhetőségek (Névjegykártya blokk) */
-        .contact-info { flex: 1; min-width: 300px; background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-top: 5px solid #1e3d59; }
-        .contact-info h2 { color: #1e3d59; margin-top: 0; margin-bottom: 1.5rem; }
-        .info-item { margin-bottom: 1.5rem; }
-        .info-item strong { display: block; color: #ff6e40; margin-bottom: 0.3rem; font-size: 1.1rem; }
-        .info-item a { color: #333; text-decoration: none; font-size: 1.1rem; transition: color 0.2s; }
-        .info-item a:hover { color: #ff6e40; }
-        .info-item p { margin: 0; font-size: 1.1rem; }
+        /* Egységes Doboz Dizájn */
+        .contact-info, .contact-form { 
+            background: white; 
+            padding: 2.5rem; 
+            border-radius: 8px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+            border-top: 5px solid #1e3d59; /* Mindkét doboz sötétkék keretet kap */
+        }
+        .contact-info { flex: 1; min-width: 300px; }
+        .contact-form { flex: 2; min-width: 300px; }
+        
+        /* Egységes Címsorok */
+        h2 { color: #1e3d59; margin-top: 0; margin-bottom: 1.5rem; border-bottom: 2px solid #eef2f5; padding-bottom: 10px; }
 
-        /* Üzenetküldő űrlap */
-        .contact-form { flex: 2; min-width: 300px; background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-top: 5px solid #ff6e40; }
-        .contact-form h2 { color: #1e3d59; margin-top: 0; margin-bottom: 1rem; }
+        /* Elérhetőségek formázása */
+        .info-item { margin-bottom: 1.5rem; }
+        .info-item strong { display: block; color: #1e3d59; margin-bottom: 0.3rem; font-size: 1.1rem; }
+        .name-title { font-size: 1.4rem; font-weight: bold; color: #1e3d59; display: block; margin-bottom: 0.2rem; }
+        .info-item p { margin: 0; font-size: 1.1rem; color: #444; }
+        .info-item a { color: #1e3d59; text-decoration: none; font-size: 1.1rem; font-weight: bold; transition: color 0.2s; }
+        .info-item a:hover { color: #ff6e40; } /* Csak rámutatáskor lesz narancs */
+        
+        .kiszallas-text { font-size: 0.95rem; color: #666; margin-top: 5px; font-style: italic; }
+
+        /* Űrlap formázása */
+        .contact-form > p { color: #555; margin-bottom: 1.5rem; line-height: 1.5; }
         .form-group { margin-bottom: 1.2rem; }
         .form-group label { display: block; font-weight: bold; margin-bottom: 0.5rem; color: #1e3d59; }
-        .form-group input, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 1rem; box-sizing: border-box; font-family: inherit; }
+        .form-group input, .form-group textarea { 
+            width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; 
+            font-size: 1rem; box-sizing: border-box; font-family: inherit; transition: border-color 0.3s; 
+        }
+        .form-group input:focus, .form-group textarea:focus { outline: none; border-color: #1e3d59; }
         .form-group textarea { resize: vertical; min-height: 120px; }
         
-        .submit-btn { display: block; width: 100%; background-color: #ff6e40; color: white; padding: 15px; border: none; border-radius: 5px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: background-color 0.3s; margin-top: 10px; }
+        /* Gomb formázása */
+        .submit-btn { display: block; width: 100%; background-color: #ff6e40; color: white; padding: 15px; border: none; border-radius: 5px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: background-color 0.3s; margin-top: 20px; }
         .submit-btn:hover { background-color: #ff5722; }
+        
         .spam-info { font-size: 0.85rem; color: #777; text-align: center; margin-top: 15px; font-style: italic; }
     </style>
 </head>
@@ -54,39 +75,43 @@
         <!-- Elérhetőségek blokk -->
         <div class="contact-info">
             <h2>Elérhetőségek</h2>
+            
             <div class="info-item">
-                <strong style="color: #1e3d59; font-size: 1.3rem;">Nagy Péter Márton</strong>
+                <span class="name-title">Nagy Péter Márton</span>
                 <p>Földmérő és földrendező mérnök</p>
             </div>
+            
             <div class="info-item">
                 <strong>Telefonszám</strong>
                 <!-- Írd be ide a telefonszámodat! -->
-                <a href="tel:+36301234567">+36 30 123 4567</a>
+                <a href="tel:+36301234567">+36 30 545 4213</a>
             </div>
+            
             <div class="info-item">
                 <strong>E-mail cím</strong>
                 <!-- Írd be ide az e-mail címedet! -->
-                <a href="mailto:TE_EMAIL_CIMED@IDE_JON.HU">TE_EMAIL_CIMED@IDE_JON.HU</a>
+                <a href="mailto:n.peter.marton@gmail.com">n.peter.marton@gmail.com</a>
             </div>
+            
             <div class="info-item">
                 <strong>Kiszállási terület</strong>
-                <p>Veszprém megyében <strong>ingyenes</strong></p>
-                <p style="font-size: 0.9rem; color: #555; margin-top: 5px; font-style: italic;">Távolabbi helyszínekre előzetes egyeztetés alapján.</p>
+                <p>Veszprém megyében <strong>ingyenes</strong>.</p>
+                <p class="kiszallas-text">Távolabbi helyszínekre előzetes egyeztetés alapján.</p>
             </div>
         </div>
 
         <!-- Üzenetküldő blokk -->
         <div class="contact-form">
             <h2>Ajánlatkérés / Üzenetküldés</h2>
-            <p style="color: #555; margin-bottom: 1.5rem;">Kérem, röviden írja le, miben segíthetek (pl. település, helyrajzi szám, elvégzendő feladat).</p>
+            <p>Kérem, röviden írja le, miben segíthetek (pl. település, helyrajzi szám, elvégzendő feladat).</p>
             
             <!-- FIGYELEM! Ide is írd be az e-mail címedet az 'action' attribútumba -->
-            <form action="https://formsubmit.co/TE_EMAIL_CIMED@IDE_JON.HU" method="POST">
+            <form action="https://formsubmit.co/n.peter.marton@gmail.com" method="POST">
                 
-                <!-- Láthatatlan csapda a robotok ellen (Honeypot) -->
+                <!-- Láthatatlan csapda a robotok ellen -->
                 <input type="text" name="_honey" style="display:none">
                 
-                <!-- Hogy az e-mail tárgya szép legyen a te postafiókodban -->
+                <!-- Az e-mail tárgya a te postafiókodban -->
                 <input type="hidden" name="_subject" value="Új ajánlatkérés érkezett az NPM Geo weboldalról!">
 
                 <div class="form-group">
