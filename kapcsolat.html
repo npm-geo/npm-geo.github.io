@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kapcsolat - NPM Geo</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background-color: #f4f4f9; color: #333; }
+        header { background-color: #1e3d59; color: white; padding: 3rem 1rem; text-align: center; }
+        header h1 { margin: 0; font-size: 3rem; letter-spacing: 2px; }
+        header p { font-size: 1.2rem; margin-top: 10px; color: #d1d8e0; }
+        nav { background-color: #333; text-align: center; padding: 15px; }
+        nav a { color: white; text-decoration: none; margin: 0 20px; font-weight: bold; transition: color 0.3s; }
+        nav a:hover { color: #ff6e40; }
+        
+        .container { max-width: 900px; margin: 2rem auto; padding: 0 1rem; display: flex; flex-wrap: wrap; gap: 2rem; }
+        
+        /* Elérhetőségek (Névjegykártya blokk) */
+        .contact-info { flex: 1; min-width: 300px; background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-top: 5px solid #1e3d59; }
+        .contact-info h2 { color: #1e3d59; margin-top: 0; margin-bottom: 1.5rem; }
+        .info-item { margin-bottom: 1.5rem; }
+        .info-item strong { display: block; color: #ff6e40; margin-bottom: 0.3rem; font-size: 1.1rem; }
+        .info-item a { color: #333; text-decoration: none; font-size: 1.1rem; transition: color 0.2s; }
+        .info-item a:hover { color: #ff6e40; }
+        .info-item p { margin: 0; font-size: 1.1rem; }
+
+        /* Üzenetküldő űrlap */
+        .contact-form { flex: 2; min-width: 300px; background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-top: 5px solid #ff6e40; }
+        .contact-form h2 { color: #1e3d59; margin-top: 0; margin-bottom: 1rem; }
+        .form-group { margin-bottom: 1.2rem; }
+        .form-group label { display: block; font-weight: bold; margin-bottom: 0.5rem; color: #1e3d59; }
+        .form-group input, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 1rem; box-sizing: border-box; font-family: inherit; }
+        .form-group textarea { resize: vertical; min-height: 120px; }
+        
+        .submit-btn { display: block; width: 100%; background-color: #ff6e40; color: white; padding: 15px; border: none; border-radius: 5px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: background-color 0.3s; margin-top: 10px; }
+        .submit-btn:hover { background-color: #ff5722; }
+        .spam-info { font-size: 0.85rem; color: #777; text-align: center; margin-top: 15px; font-style: italic; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>NPM Geo</h1>
+        <p>Precíz Földmérés Veszprém megyében és a Bakony térségében</p>
+    </header>
+    
+    <nav>
+        <a href="index.html">Főoldal</a>
+        <a href="szolgaltatasok.html">Szolgáltatások</a>
+        <a href="aranykorona.html">AK Kalkulátor</a>
+        <a href="kapcsolat.html">Kapcsolat</a>
+    </nav>
+
+    <div class="container">
+        <!-- Elérhetőségek blokk -->
+        <div class="contact-info">
+            <h2>Elérhetőségek</h2>
+            <div class="info-item">
+                <strong>Cégnév</strong>
+                <p>NPM Geo</p>
+            </div>
+            <div class="info-item">
+                <strong>Telefonszám</strong>
+                <!-- Írd be ide a telefonszámodat! -->
+                <a href="tel:+36305454213">+36 30 545 4213</a>
+            </div>
+            <div class="info-item">
+                <strong>E-mail cím</strong>
+                <!-- Írd be ide az e-mail címedet! -->
+                <a href="mailto:n.peter.marton@gmail.com">n.peter.marton@gmail.com</a>
+            </div>
+            <div class="info-item">
+                <strong>Kiszállási terület</strong>
+                <p>Veszprém megye és a Bakony térsége</p>
+            </div>
+        </div>
+
+        <!-- Üzenetküldő blokk -->
+        <div class="contact-form">
+            <h2>Ajánlatkérés / Üzenetküldés</h2>
+            <p style="color: #555; margin-bottom: 1.5rem;">Kérjük, röviden írja le, miben segíthetünk (pl. település, helyrajzi szám, elvégzendő feladat).</p>
+            
+            <!-- FIGYELEM! Ide is írd be az e-mail címedet az 'action' attribútumba -->
+            <form action="https://formsubmit.co/n.peter.marton@gmail.com" method="POST">
+                
+                <!-- Láthatatlan csapda a robotok ellen (Honeypot) -->
+                <input type="text" name="_honey" style="display:none">
+                
+                <!-- Hogy az e-mail tárgya szép legyen a te postafiókodban -->
+                <input type="hidden" name="_subject" value="Új ajánlatkérés érkezett az NPM Geo weboldalról!">
+
+                <div class="form-group">
+                    <label for="nev">Név (Kötelező)</label>
+                    <input type="text" id="nev" name="Név" required placeholder="Az Ön neve">
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">E-mail cím (Kötelező)</label>
+                    <input type="email" id="email" name="E-mail" required placeholder="pelda@email.hu">
+                </div>
+                
+                <div class="form-group">
+                    <label for="telefon">Telefonszám</label>
+                    <input type="tel" id="telefon" name="Telefon" placeholder="+36 30 123 4567">
+                </div>
+                
+                <div class="form-group">
+                    <label for="uzenet">Üzenet, feladat leírása (Kötelező)</label>
+                    <textarea id="uzenet" name="Üzenet" required placeholder="Kérem a segítségét a következő helyrajzi számú ingatlanhoz..."></textarea>
+                </div>
+                
+                <button type="submit" class="submit-btn">Üzenet küldése</button>
+                <p class="spam-info">Rendszerünk automatikus robotvédelmet (CAPTCHA) használ az adatok biztonsága érdekében.</p>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
